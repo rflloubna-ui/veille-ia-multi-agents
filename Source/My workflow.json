@@ -1,0 +1,174 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "18378064-7c22-4765-845e-99b92d846bb5",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "url": "https://www.langchain.com/blog",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        208,
+        0
+      ],
+      "id": "0625905c-b150-436b-b096-680f841fe344",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Tu es un assistant de veille technologique et stratégique.\n\nAnalyse le marché des frameworks IA : LangChain, LlamaIndex, CrewAI, AutoGen et Hugging Face.\n\nGénère un rapport professionnel en français avec :\n1. Résumé exécutif\n2. Tendances technologiques\n3. Opportunités\n4. Risques\n5. Recommandations stratégiques\n6. Actions prioritaires\n7. Conclusion",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        416,
+        0
+      ],
+      "id": "afc7cac4-93f6-4500-91f9-57a27e22f61d",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        288,
+        208
+      ],
+      "id": "8bb20d23-eb12-43f8-9c05-3da7fe746932",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "kNiZRjsUlLK0kj4K",
+          "name": "Google Gemini(PaLM) Api account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Tu es un analyste stratégique IA.\n\nAnalyse le rapport reçu et donne :\n- les opportunités business\n- les risques technologiques\n- les frameworks IA les plus prometteurs\n- les impacts pour les entreprises\n- les recommandations prioritaires\n\nRéponds en français professionnel.\n\nRapport reçu :\n{{ $json.output }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        768,
+        0
+      ],
+      "id": "3a5724f8-c554-4d60-a037-7761d043bc40",
+      "name": "Agent Analyste"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Tu es un agent rapporteur stratégique.\n\nÀ partir de l’analyse reçue, génère un rapport final structuré avec :\n1. Résumé exécutif\n2. Tendances détectées\n3. Opportunités\n4. Risques\n5. Recommandations stratégiques\n6. Actions prioritaires\n7. Conclusion\n\nRéponds en français professionnel, clair et bien organisé.\n\nAnalyse reçue :\n{{ $json.output }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        800,
+        192
+      ],
+      "id": "068f9f45-2f63-4062-b142-f79f5cfa7c33",
+      "name": "Agent Rapporteur"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Agent Analyste",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Agent Rapporteur",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Agent Analyste",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Agent Analyste": {
+      "main": [
+        [
+          {
+            "node": "Agent Rapporteur",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "1f002634-93a5-491b-9922-a3ad1198f425",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "98580a6de0924ee510d38e74e8ec75e9198c4f05b0091842d7daf00b7dd3d4ac"
+  },
+  "id": "auPrBnplOmHweuSO",
+  "tags": []
+}

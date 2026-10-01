@@ -55,7 +55,7 @@ Chaque agent reçoit la sortie de l'agent précédent via l'expression `{{ $json
 
 1. Lancer Docker Desktop
 2. Ouvrir n8n : http://localhost:5678
-3. Importer `Source/My workflow.json` (menu *Import from File)
+3. Importer `Source/My workflow.json` 
 4. Configurer un credential Google Gemini (PaLM) API avec votre clé et l'associer au node Google Gemini Chat Model
 5. Exécuter le workflow
 
